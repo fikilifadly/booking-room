@@ -2,34 +2,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable("RoomUsages", {
+		await queryInterface.createTable("roomUsage", {
 			id: {
 				allowNull: false,
 				type: Sequelize.INTEGER,
 			},
 			clientId: {
-				references: {
-					model: "clients",
-					key: "id",
-				},
 				allowNull: false,
 				type: Sequelize.INTEGER,
 			},
 			roomId: {
-				references: {
-					model: "rooms",
-					key: "id",
-				},
 				allowNull: false,
 				type: Sequelize.INTEGER,
 			},
 			startTime: {
 				allowNull: false,
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(150),
 			},
 			endTime: {
 				allowNull: false,
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(150),
 			},
 			bookingDate: {
 				allowNull: false,
@@ -46,6 +38,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("RoomUsages");
+		await queryInterface.dropTable("roomUsage");
 	},
 };

@@ -8,7 +8,7 @@ module.exports = {
 				allowNull: false,
 			},
 			roomName: {
-				type: Sequelize.STRING,
+				type: Sequelize.STRING(255),
 				allowNull: false,
 			},
 			costPerHour: {

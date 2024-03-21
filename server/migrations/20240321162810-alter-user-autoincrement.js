@@ -5,17 +5,19 @@ module.exports = {
 	async up(queryInterface, Sequelize) {
 		await queryInterface.changeColumn("user", "id", {
 			type: Sequelize.INTEGER,
-			autoIncrement: true,
-			primaryKey: true,
 			allowNull: false,
+			autoIncrement: true,
+			autoIncrement: 2,
+			primaryKey: true,
 		});
-
-		await queryInterface.sequelize.query(`
-      ALTER TABLE user AUTO_INCREMENT = 2;
-    `);
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("user");
+		await queryInterface.changeColumn("user", "id", {
+			type: Sequelize.INTEGER,
+			allowNull: false,
+			autoIncrement: true,
+			primaryKey: true,
+		});
 	},
 };
