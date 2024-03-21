@@ -1,0 +1,17 @@
+[
+    {
+      "id": 1,
+      "roomName": "Conference Room",
+      "costPerHour": 5
+    },
+    {
+      "id": 2,
+      "roomName": "Discussion Room",
+      "costPerHour": 1
+    },
+    {
+      "id": 3,
+      "roomName": "Event Space",
+      "costPerHour": 10
+    }
+  ]
