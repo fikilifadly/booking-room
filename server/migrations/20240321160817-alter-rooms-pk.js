@@ -13,6 +13,7 @@ module.exports = {
 
 		await queryInterface.addConstraint("rooms", {
 			fields: ["id"],
+			primaryKey: true,
 			type: "primary key",
 			name: "rooms_pkey",
 		});
@@ -20,6 +21,6 @@ module.exports = {
 
 	async down(queryInterface, Sequelize) {
 		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "rooms_id_seq" CASCADE;');
-		await queryInterface.removeConstraint("rooms", "rooms_pkey");
+		await queryInterface.sequelize.query("DROP CONSTRAINT IF EXISTS rooms_pkey CASCADE;");
 	},
 };

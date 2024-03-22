@@ -4,6 +4,7 @@
 module.exports = {
 	async up(queryInterface, sequelize) {
 		await queryInterface.sequelize.query('CREATE SEQUENCE IF NOT EXISTS "clients_id_seq" RESTART WITH 1 INCREMENT BY 3;');
+
 		await queryInterface.addIndex("clients", ["id"], {
 			defaultValue: {
 				raw: "nextval('client_id_seq'::regclass)",
@@ -14,6 +15,7 @@ module.exports = {
 			fields: ["id"],
 			primaryKey: true,
 			type: "primary key",
+			name: "clients_pkey",
 		});
 
 		await queryInterface.addIndex("clients", ["email"], {
@@ -23,7 +25,6 @@ module.exports = {
 
 	async down(queryInterface, Sequelize) {
 		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "clients_id_seq" CASCADE;');
-		await queryInterface.removeConstraint("clients", "clients_pkey");
-		await queryInterface.removeIndex("clients", "clients_email_unique");
+		await queryInterface.sequelize.query("ALTER TABLE clients DROP CONSTRAINT clients_pkey;");
 	},
 };

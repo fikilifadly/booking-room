@@ -37,7 +37,6 @@ module.exports = class UserController {
 			if (!email) throw { name: "Email is required", status: 400 };
 			if (!password) throw { name: "Password is required", status: 400 };
 
-			console.log("masuk");
 			const data = await User.findOne({
 				where: {
 					email,
@@ -93,15 +92,18 @@ module.exports = class UserController {
 
 			if (!req.body) throw { name: "Bad Request", status: 400 };
 			const { name, email, password } = req.body;
+			if (!name && !email && !password) throw { name: "Bad Request", status: 400 };
 
-			const data = await User.update(
-				{ name, email, password },
-				{
-					where: {
-						id,
-					},
-				}
-			);
+			const newUser = {
+				...user,
+				...Object.entries(req.body).filter(([key, value]) => key in user && value !== undefined), // Filter by key existence and defined value
+			};
+
+			await User.update(newUser, {
+				where: {
+					id,
+				},
+			});
 			res.status(200).json({ message: `User: ${user.name} has been updated` });
 		} catch (error) {
 			next(error);

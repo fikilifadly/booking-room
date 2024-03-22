@@ -91,6 +91,10 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
+			createdAt: {
+				type: DataTypes.DATE,
+				allowNull: false,
+			},
 		},
 		{
 			sequelize,
@@ -99,5 +103,10 @@ module.exports = (sequelize, DataTypes) => {
 			timestamps: false,
 		}
 	);
+
+	RoomUsage.beforeValidate(async (roomUsage) => {
+		roomUsage.createdAt = new Date();
+	});
+
 	return RoomUsage;
 };

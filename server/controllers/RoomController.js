@@ -28,19 +28,19 @@ module.exports = class RoomController {
 			if (!room) throw { name: "Room not found", status: 404 };
 			if (!req.body) throw { name: "Bad Request", status: 400 };
 			const { roomName, costPerHour } = req.body;
-			console.log(roomName, costPerHour);
+
 			if (!roomName && !costPerHour) throw { name: "Bad Request", status: 400 };
-			await room.update(
-				{
-					roomName,
-					costPerHour,
+
+			const newRoom = {
+				...room,
+				...Object.entries(req.body).filter(([key, value]) => key in room && value !== undefined), // Filter by key existence and defined value
+			};
+
+			await room.update(newRoom, {
+				where: {
+					id,
 				},
-				{
-					where: {
-						id,
-					},
-				}
-			);
+			});
 			res.status(200).json({ message: `Room: ${room.roomName} has been updated` });
 		} catch (error) {
 			next(error);
