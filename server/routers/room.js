@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.use(authentication);
 router.get("/room", RoomController.getAllRoom);
+router.get("/room/:id", RoomController.getRoomById);
 router.post("/room", RoomController.addRoom);
 router.patch("/room/:id", RoomController.editRoom);
 router.delete("/room/:id", RoomController.deleteRoom);

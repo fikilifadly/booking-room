@@ -71,4 +71,15 @@ module.exports = class RoomController {
 			next(error);
 		}
 	}
+
+	static async getRoomById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const room = await Room.findByPk(id);
+			if (!room) throw { name: "Room not found", status: 404 };
+			res.status(200).json(room);
+		} catch (error) {
+			next(error);
+		}
+	}
 };

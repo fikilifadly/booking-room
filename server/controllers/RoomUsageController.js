@@ -4,7 +4,22 @@ const { Client, Room, RoomUsage } = require("../models");
 module.exports = class RoomUsageController {
 	static async getAllRoomUsage(req, res, next) {
 		try {
-			const roomUsage = await RoomUsage.findAll();
+			const roomUsage = await RoomUsage.findAll({
+				include: [{ model: Client }, { model: Room }],
+			});
+			res.status(200).json(roomUsage);
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getRoomUsageById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const roomUsage = await RoomUsage.findByPk(id, {
+				include: [{ model: Client }, { model: Room }],
+			});
+			if (!roomUsage) throw { name: "Room Usage not found", status: 404 };
 			res.status(200).json(roomUsage);
 		} catch (error) {
 			next(error);

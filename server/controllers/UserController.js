@@ -122,4 +122,22 @@ module.exports = class UserController {
 			next(error);
 		}
 	}
+
+	static async getUserById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const user = await User.findOne({
+				where: {
+					id,
+				},
+				attributes: {
+					exclude: ["password"],
+				},
+			});
+			if (!user) throw { name: "User not found", status: 404 };
+			res.status(200).json(user);
+		} catch (error) {
+			next(error);
+		}
+	}
 };

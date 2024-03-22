@@ -10,6 +10,17 @@ module.exports = class ClientController {
 		}
 	}
 
+	static async getClientById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const data = await Client.findByPk(id);
+			if (!data) throw { name: "Client not found", status: 404 };
+			res.status(200).json(data);
+		} catch (error) {
+			next(error);
+		}
+	}
+
 	static async addClient(req, res, next) {
 		try {
 			if (!req.body) {
