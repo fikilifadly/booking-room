@@ -8,9 +8,9 @@ module.exports = class UserController {
 				throw { name: "Name, Email and Password is required", status: 400 };
 			}
 
-			const { email } = req.body;
+			const { name, email, password } = req.body;
 
-			await User.create(req.body);
+			await User.create({ name, email, password });
 
 			const latsUser = await User.findOne({
 				attributes: {
@@ -53,6 +53,38 @@ module.exports = class UserController {
 			const access_token = signToken({ id: data.id });
 
 			res.status(200).json({ access_token });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async delete(req, res, next) {
+		try {
+			const { id } = req.params;
+			const data = await User.destroy({
+				where: {
+					id,
+				},
+			});
+			res.status(200).json({ message: `User: ${data.name} has been deleted` });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async edit(req, res, next) {
+		try {
+			const { id } = req.params;
+			const { name, email, password } = req.body;
+			const data = await User.update(
+				{ name, email, password },
+				{
+					where: {
+						id,
+					},
+				}
+			);
+			res.status(200).json({ message: `User: ${data.name} has been updated` });
 		} catch (error) {
 			next(error);
 		}
