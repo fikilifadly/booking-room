@@ -21,7 +21,7 @@ module.exports = class UserController {
 				},
 			});
 
-			res.status(201).json(latsUser);
+			res.status(201).json({ message: "Register Success" });
 		} catch (error) {
 			next(error);
 		}
@@ -96,7 +96,7 @@ module.exports = class UserController {
 
 			const newUser = {
 				...user,
-				...Object.entries(req.body).filter(([key, value]) => key in user && value !== undefined), // Filter by key existence and defined value
+				...Object.entries(req.body).filter(([key, value]) => key in user && value !== undefined),
 			};
 
 			await User.update(newUser, {

@@ -33,7 +33,7 @@ module.exports = class RoomController {
 
 			const newRoom = {
 				...room,
-				...Object.entries(req.body).filter(([key, value]) => key in room && value !== undefined), // Filter by key existence and defined value
+				...Object.entries(req.body).filter(([key, value]) => key in room && value !== undefined),
 			};
 
 			await room.update(newRoom, {
