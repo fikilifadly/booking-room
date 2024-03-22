@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { hashPass } = require("../lib");
 module.exports = (sequelize, DataTypes) => {
 	class User extends Model {
 		/**
@@ -52,17 +53,25 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
+			createdAt: {
+				type: DataTypes.DATE,
+				allowNull: false,
+			},
 		},
 		{
 			sequelize,
 			tableName: "user",
 			modelName: "User",
+			timestamps: false,
 		}
 	);
 
+	User.beforeValidate(async (user) => {
+		user.createdAt = new Date();
+	});
+
 	User.beforeCreate(async (user) => {
-		const salt = await bcrypt.genSalt();
-		user.password = await bcrypt.hash(user.password, salt);
+		user.password = hashPass(user.password);
 	});
 
 	return User;
