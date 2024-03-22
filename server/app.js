@@ -11,10 +11,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use(router);
+
 app.use((req, res, next) => {
 	res.status(405).send({ message: "Method Not Allowed" });
 });
-
 app.use(errorHandler);
 
 module.exports = app;

@@ -75,7 +75,7 @@ module.exports = class UserController {
 					id,
 				},
 			});
-			res.status(200).json({ message: `User: ${data.name} has been deleted` });
+			res.status(200).json({ message: `User: ${user.name} has been deleted` });
 		} catch (error) {
 			next(error);
 		}

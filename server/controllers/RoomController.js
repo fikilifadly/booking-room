@@ -1,15 +1,16 @@
-const room = require("../models/room");
+const { Room } = require("../models");
 
 module.exports = class RoomController {
 	static async addRoom(req, res, next) {
 		try {
+			console.log(Room);
 			if (!req.body) {
 				throw { name: "Room Name and Cost is required", status: 400 };
 			}
 
 			const { roomName, costPerHour } = req.body;
 
-			const room = await room.create({
+			const room = await Room.create({
 				roomName,
 				costPerHour,
 			});
@@ -22,13 +23,13 @@ module.exports = class RoomController {
 	static async editRoom(req, res, next) {
 		try {
 			const { id } = req.params;
-			console.log("masuk");
-			const room = await room.findByPk(id);
+			const room = await Room.findByPk(id);
 
 			if (!room) throw { name: "Room not found", status: 404 };
 			if (!req.body) throw { name: "Bad Request", status: 400 };
-
 			const { roomName, costPerHour } = req.body;
+			console.log(roomName, costPerHour);
+			if (!roomName && !costPerHour) throw { name: "Bad Request", status: 400 };
 			await room.update(
 				{
 					roomName,
@@ -40,7 +41,7 @@ module.exports = class RoomController {
 					},
 				}
 			);
-			res.status(200).json(room);
+			res.status(200).json({ message: `Room: ${room.roomName} has been updated` });
 		} catch (error) {
 			next(error);
 		}
@@ -49,14 +50,14 @@ module.exports = class RoomController {
 	static async deleteRoom(req, res, next) {
 		try {
 			const { id } = req.params;
-			const room = await room.findByPk(id);
+			const room = await Room.findByPk(id);
 			if (!room) throw { name: "Room not found", status: 404 };
-			const data = await room.destroy({
+			const data = await Room.destroy({
 				where: {
 					id,
 				},
 			});
-			res.status(200).json({ message: `Room: ${data.roomName} has been deleted` });
+			res.status(200).json({ message: `Room: ${room.roomName} has been deleted` });
 		} catch (error) {
 			next(error);
 		}
@@ -64,7 +65,7 @@ module.exports = class RoomController {
 
 	static async getAllRoom(req, res, next) {
 		try {
-			const data = await room.findAll();
+			const data = await Room.findAll();
 			res.status(200).json(data);
 		} catch (error) {
 			next(error);
