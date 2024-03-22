@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
+			Room.hasMany(models.RoomUsage, {
+				foreignKey: "roomId",
+			});
 		}
 	}
 	Room.init(
@@ -42,7 +45,9 @@ module.exports = (sequelize, DataTypes) => {
 			sequelize,
 			tableName: "rooms",
 			modelName: "Room",
+			timestamps: false,
 		}
 	);
+
 	return Room;
 };

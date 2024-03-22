@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.sequelize.query('CREATE SEQUENCE "user_id_seq" RESTART WITH 1 INCREMENT BY 2;');
+		await queryInterface.sequelize.query('CREATE SEQUENCE IF NOT EXISTS "user_id_seq" RESTART WITH 1 INCREMENT BY 2;');
 
 		await queryInterface.addIndex("user", ["id"], {
 			defaultValue: {
@@ -29,6 +29,7 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
+		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "user_id_seq" CASCADE;');
 		await queryInterface.removeConstraint("user", "user_pkey");
 		await queryInterface.removeIndex("user", "user_email_unique");
 	},

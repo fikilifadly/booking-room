@@ -61,6 +61,15 @@ module.exports = class UserController {
 	static async delete(req, res, next) {
 		try {
 			const { id } = req.params;
+
+			const user = await User.findOne({
+				where: {
+					id,
+				},
+			});
+
+			if (!user) throw { name: "User not found", status: 404 };
+
 			const data = await User.destroy({
 				where: {
 					id,
@@ -75,7 +84,16 @@ module.exports = class UserController {
 	static async edit(req, res, next) {
 		try {
 			const { id } = req.params;
+			const user = await User.findOne({
+				where: {
+					id,
+				},
+			});
+			if (!user) throw { name: "User not found", status: 404 };
+
+			if (!req.body) throw { name: "Bad Request", status: 400 };
 			const { name, email, password } = req.body;
+
 			const data = await User.update(
 				{ name, email, password },
 				{
@@ -84,7 +102,20 @@ module.exports = class UserController {
 					},
 				}
 			);
-			res.status(200).json({ message: `User: ${data.name} has been updated` });
+			res.status(200).json({ message: `User: ${user.name} has been updated` });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getAll(req, res, next) {
+		try {
+			const users = await User.findAll({
+				attributes: {
+					exclude: ["password"],
+				},
+			});
+			res.status(200).json(users);
 		} catch (error) {
 			next(error);
 		}

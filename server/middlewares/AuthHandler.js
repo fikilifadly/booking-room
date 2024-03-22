@@ -12,9 +12,11 @@ async function authentication(req, res, next) {
 		if (bearer !== "Bearer" || !token) throw { name: "Invalid token", status: 401 };
 
 		const { id } = verifyToken(token);
-
-		const user = await User.findByPk(id);
-
+		const user = await User.findOne({
+			where: {
+				id,
+			},
+		});
 		if (!user) throw { name: "Invalid token", status: 401 };
 
 		req.user = {

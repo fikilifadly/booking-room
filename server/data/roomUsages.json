@@ -1,4 +1,5 @@
-{
+[
+  {
     "id": 1,
     "clientId": 2,
     "roomId": 2,
@@ -8,3 +9,4 @@
     "quotaUsed": 5,
     "createdAt": "2021-04-15 05:25:52"
   }
+]

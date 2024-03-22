@@ -19,6 +19,7 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
+		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "rooms_id_seq" CASCADE;');
 		await queryInterface.removeConstraint("rooms", "rooms_pkey");
 	},
 };

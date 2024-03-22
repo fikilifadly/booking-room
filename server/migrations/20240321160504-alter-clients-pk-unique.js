@@ -22,6 +22,7 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
+		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "clients_id_seq" CASCADE;');
 		await queryInterface.removeConstraint("clients", "clients_pkey");
 		await queryInterface.removeIndex("clients", "clients_email_unique");
 	},
