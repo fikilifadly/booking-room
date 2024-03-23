@@ -5,6 +5,7 @@ module.exports = class RoomUsageController {
 	static async getAllRoomUsage(req, res, next) {
 		try {
 			const roomUsage = await RoomUsage.findAll({
+				order: [["id", "ASC"]],
 				include: [{ model: Client }, { model: Room }],
 			});
 			res.status(200).json(roomUsage);
@@ -107,16 +108,10 @@ module.exports = class RoomUsageController {
 				if (usedRoom && usedRoom.clientId !== clientId) throw { name: "Room already taken", status: 400 };
 			}
 
-			const newRoomUsage = {
-				...roomUsage,
-				...Object.entries(req.body).filter(([key, value]) => key in roomUsage && value !== undefined),
-			};
+			let newRoomUsage = Object.fromEntries(Object.entries(req.body).filter(([key, value]) => key in roomUsage && value !== undefined && value !== null && value !== ""));
 
-			await roomUsage.update(newRoomUsage, {
-				where: {
-					id,
-				},
-			});
+			await roomUsage.update(newRoomUsage);
+			await roomUsage.save();
 			res.status(200).json({ message: `Roomusage ${roomUsage.id} has been updated` });
 		} catch (error) {
 			next(error);

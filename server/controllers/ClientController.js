@@ -3,7 +3,7 @@ const { Client } = require("../models");
 module.exports = class ClientController {
 	static async getAllClients(req, res, next) {
 		try {
-			const data = await Client.findAll();
+			const data = await Client.findAll({ order: [["id", "ASC"]] });
 			res.status(200).json(data);
 		} catch (error) {
 			next(error);
@@ -49,16 +49,10 @@ module.exports = class ClientController {
 
 			if (!name && !email && !phone && !credit) throw { name: "Bad Request", status: 400 };
 
-			const newClient = {
-				...client,
-				...Object.entries(req.body).filter(([key, value]) => key in client && value !== undefined),
-			};
+			let newClient = Object.fromEntries(Object.entries(req.body).filter(([key, value]) => key in client && value !== undefined && value !== null && value !== ""));
 
-			await Client.update(newClient, {
-				where: {
-					id,
-				},
-			});
+			await client.update(newClient);
+			await client.save();
 			res.status(200).json({ message: `${client.name} has been updated` });
 		} catch (error) {
 			next(error);

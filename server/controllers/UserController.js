@@ -83,6 +83,7 @@ module.exports = class UserController {
 	static async edit(req, res, next) {
 		try {
 			const { id } = req.params;
+			console.log(id, "====");
 			const user = await User.findOne({
 				where: {
 					id,
@@ -94,16 +95,10 @@ module.exports = class UserController {
 			const { name, email, password } = req.body;
 			if (!name && !email && !password) throw { name: "Bad Request", status: 400 };
 
-			const newUser = {
-				...user,
-				...Object.entries(req.body).filter(([key, value]) => key in user && value !== undefined),
-			};
+			let newUser = Object.fromEntries(Object.entries(req.body).filter(([key, value]) => key in user && value !== undefined && value !== null && value !== ""));
 
-			await User.update(newUser, {
-				where: {
-					id,
-				},
-			});
+			await user.update(newUser);
+			await user.save();
 			res.status(200).json({ message: `User: ${user.name} has been updated` });
 		} catch (error) {
 			next(error);
@@ -116,6 +111,7 @@ module.exports = class UserController {
 				attributes: {
 					exclude: ["password"],
 				},
+				order: [["id", "ASC"]],
 			});
 			res.status(200).json(users);
 		} catch (error) {

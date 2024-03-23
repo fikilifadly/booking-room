@@ -14,7 +14,7 @@ module.exports = class RoomController {
 				roomName,
 				costPerHour,
 			});
-			res.status(201).json(room);
+			res.status(201).json({ message: "Room has been created" });
 		} catch (error) {
 			next(error);
 		}
@@ -31,16 +31,10 @@ module.exports = class RoomController {
 
 			if (!roomName && !costPerHour) throw { name: "Bad Request", status: 400 };
 
-			const newRoom = {
-				...room,
-				...Object.entries(req.body).filter(([key, value]) => key in room && value !== undefined),
-			};
+			let newRoom = Object.fromEntries(Object.entries(req.body).filter(([key, value]) => key in room && value !== undefined && value !== null && value !== ""));
 
-			await room.update(newRoom, {
-				where: {
-					id,
-				},
-			});
+			await room.update(newRoom);
+			await room.save();
 			res.status(200).json({ message: `Room: ${room.roomName} has been updated` });
 		} catch (error) {
 			next(error);
@@ -65,7 +59,7 @@ module.exports = class RoomController {
 
 	static async getAllRoom(req, res, next) {
 		try {
-			const data = await Room.findAll();
+			const data = await Room.findAll({ order: [["id", "ASC"]] });
 			res.status(200).json(data);
 		} catch (error) {
 			next(error);
