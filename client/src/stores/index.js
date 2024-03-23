@@ -3,7 +3,6 @@ import clientSlice from "./clientSlice";
 import roomSlice from "./roomSlice";
 import roomUsage from "./roomUsage";
 import userSlice from "./userSlice";
-import modalSlice from "./modalSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -11,6 +10,5 @@ export const store = configureStore({
 		room: roomSlice,
 		roomUsage: roomUsage,
 		user: userSlice,
-		modal: modalSlice,
 	},
 });

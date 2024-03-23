@@ -11,8 +11,8 @@ const roomUsageSlice = createSlice({
 		errorMessage: "",
 	},
 	reducers: {
-		setCurrentRoomUsage: (state, { payload }) => {
-			state.currentRoomUsage = state.roomUsages.find((roomUsage) => roomUsage.id === payload);
+		setNullCurrentRoomUsage: (state) => {
+			state.currentRoomUsage = null;
 		},
 	},
 	extraReducers: (builder) => {
@@ -40,10 +40,10 @@ const roomUsageSlice = createSlice({
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(createRoomUsage.rejected, (state, action) => {
-				toast.error(action.error.message);
+			.addCase(createRoomUsage.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
-				state.errorMessage = action.error.message;
 			});
 
 		builder
@@ -52,18 +52,12 @@ const roomUsageSlice = createSlice({
 			})
 			.addCase(editRoomUsage.fulfilled, (state, { payload }) => {
 				toast.success(payload.message);
-				state.roomUsages = state.roomUsages.map((roomUsage) => {
-					if (roomUsage.id === payload.id) {
-						return payload;
-					}
-					return roomUsage;
-				});
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(editRoomUsage.rejected, (state, action) => {
-				toast.error(action.error.message);
-				state.errorMessage = action.error.message;
+			.addCase(editRoomUsage.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
 			});
 
@@ -73,13 +67,12 @@ const roomUsageSlice = createSlice({
 			})
 			.addCase(deleteRoomUsage.fulfilled, (state, { payload }) => {
 				toast.success(payload.message);
-				state.roomUsages = state.roomUsages.filter((roomUsage) => roomUsage.id !== payload.id);
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(deleteRoomUsage.rejected, (state, action) => {
-				toast.error(action.error.message);
-				state.errorMessage = action.error.message;
+			.addCase(deleteRoomUsage.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
 			});
 
@@ -88,59 +81,83 @@ const roomUsageSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(getRoomUsageById.fulfilled, (state, { payload }) => {
-				state.currentRoomUsage = state.roomUsages.find((roomUsage) => roomUsage.id === payload);
+				state.currentRoomUsage = payload;
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(getRoomUsageById.rejected, (state, action) => {
-				toast.error(action.error.message);
+			.addCase(getRoomUsageById.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
-				state.errorMessage = action.error.message;
 			});
 	},
 });
 
-export const fetchRoomUsages = createAsyncThunk("roomUsage/fetch", async () => {
-	const { data } = await AxiosJSON({
-		method: "get",
-		url: "/roomusage",
-	});
-	return data;
+export const fetchRoomUsages = createAsyncThunk("roomUsages/fetch", async (data, { rejectWithValue }) => {
+	try {
+		const { data: roomUsages } = await AxiosJSON({
+			method: "get",
+			url: "/roomusage",
+		});
+		return roomUsages;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const createRoomUsage = createAsyncThunk("roomUsage/create", async (data) => {
-	const { data: roomUsage } = await AxiosJSON({
-		method: "post",
-		url: "/roomusage",
-		data,
-	});
-	return roomUsage;
+export const createRoomUsage = createAsyncThunk("roomUsage/create", async (data, { rejectWithValue }) => {
+	try {
+		const { data: roomUsage } = await AxiosJSON({
+			method: "post",
+			url: "/roomusage",
+			data,
+		});
+		return roomUsage;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const editRoomUsage = createAsyncThunk("roomUsage/edit", async (data) => {
-	const { data: roomUsage } = await AxiosJSON({
-		method: "put",
-		url: `/roomusage/${data.id}`,
-		data,
-	});
-	return roomUsage;
+export const editRoomUsage = createAsyncThunk("roomUsage/edit", async (data, { rejectWithValue }) => {
+	try {
+		const url = `/roomusage/${data.id}`;
+		console.log(url, data);
+		delete data.id;
+
+		const { data: roomUsage } = await AxiosJSON({
+			method: "patch",
+			url,
+			data,
+		});
+		return roomUsage;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const deleteRoomUsage = createAsyncThunk("roomUsage/delete", async (data) => {
-	const { data: roomUsage } = await AxiosJSON({
-		method: "delete",
-		url: `/roomusage/${data.id}`,
-	});
-	return roomUsage;
+export const deleteRoomUsage = createAsyncThunk("roomUsage/delete", async (id, { rejectWithValue }) => {
+	try {
+		const { data } = await AxiosJSON({
+			method: "delete",
+			url: `/roomusage/${id}`,
+		});
+		return data;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const getRoomUsageById = createAsyncThunk("roomUsage/getById", async (data) => {
-	const { data: roomUsage } = await AxiosJSON({
-		method: "get",
-		url: `/roomusage/${data}`,
-	});
-	return roomUsage;
+export const getRoomUsageById = createAsyncThunk("roomUsage/get", async (id, { rejectWithValue }) => {
+	try {
+		const { data: roomUsage } = await AxiosJSON({
+			method: "get",
+			url: `/roomusage/${id}`,
+		});
+		return roomUsage;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const { setRoomUsage } = roomUsageSlice.actions;
+export const { setNullCurrentRoomUsage } = roomUsageSlice.actions;
 export default roomUsageSlice.reducer;
