@@ -12,6 +12,7 @@ const clientSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchClients.pending, (state) => {
+				console.log("masuk pending");
 				state.loading = true;
 			})
 			.addCase(fetchClients.fulfilled, (state, { payload }) => {
@@ -20,6 +21,7 @@ const clientSlice = createSlice({
 				state.loading = false;
 			})
 			.addCase(fetchClients.rejected, (state, action) => {
+				console.log("masuk pending2");
 				state.loading = false;
 				state.errorMessage = action.error.message;
 			})
@@ -41,7 +43,7 @@ const clientSlice = createSlice({
 export const fetchClients = createAsyncThunk("clients/fetch", async () => {
 	const { data } = await AxiosJSON({
 		method: "get",
-		url: "http://localhost:3000/clients",
+		url: "/client",
 	});
 	return data;
 });
@@ -49,7 +51,7 @@ export const fetchClients = createAsyncThunk("clients/fetch", async () => {
 export const createClient = createAsyncThunk("clients/create", async (data) => {
 	const { data: client } = await AxiosJSON({
 		method: "post",
-		url: "http://localhost:3000/clients",
+		url: "/client",
 		data,
 	});
 	return client;

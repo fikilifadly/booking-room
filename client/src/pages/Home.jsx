@@ -1,19 +1,29 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Cards from "../components/Cards";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { fetchClients } from "../stores/clientSlice";
+import { fetchUsers } from "../stores/userSlice";
 
 const Home = () => {
 	const { clients } = useSelector((state) => state.client);
 	const { rooms } = useSelector((state) => state.room);
 	const { roomUsages } = useSelector((state) => state.roomUsage);
-	const { users, currentUser } = useSelector((state) => state.user);
+	const { users, currentUser, access_token } = useSelector((state) => state.user);
 
-	console.log(clients);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchClients());
+		dispatch(fetchUsers());
+	}, [dispatch]);
+
+	console.log(access_token);
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex flex-col gap-2">
 				<h2 className="font-bold text-3xl">Welcome Back, {currentUser ? currentUser.name : "Admin"}</h2>
-				<p className="text-gray-500">Track, manage and forecast your platform information here</p>
+				<p className="text-gray-500">Track, manage your information here</p>
 			</div>
 
 			<Cards
