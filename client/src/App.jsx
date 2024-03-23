@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Dashboard from "./layouts/Dashboard";
 
 const router = createBrowserRouter([
 	{
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
 			console.log("masuk");
 			return null;
 		},
-		element: <div>Hello</div>,
+		element: <Dashboard />,
 		children: [
 			{
 				path: "/",
