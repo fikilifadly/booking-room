@@ -11,8 +11,11 @@ const userSlice = createSlice({
 		currentUser: null,
 	},
 	reducers: {
-		getUserById: (state, { payload }) => {
-			state.currentUser = state.users.find((user) => user.id === payload);
+		setIsEdit: (state, { payload }) => {
+			state.isEdit = payload;
+		},
+		setNullCurrentUser: (state) => {
+			state.currentUser = null;
 		},
 	},
 	extraReducers: (builder) => {
@@ -36,7 +39,8 @@ const userSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(createUser.fulfilled, (state, { payload }) => {
-				toast.success(payload.message);
+				console.log(payload, "=====");
+				toast.success(payload.data.message);
 				state.errorMessage = "";
 				state.users.push(payload);
 				state.loading = false;
@@ -102,7 +106,8 @@ const userSlice = createSlice({
 				state.loading = true;
 			})
 			.addCase(getUserById.fulfilled, (state, { payload }) => {
-				state.currentUser = state.users.find((user) => user.id === payload);
+				console.log(payload);
+				state.currentUser = payload;
 				state.errorMessage = "";
 				state.loading = false;
 			})
@@ -146,7 +151,7 @@ export const createUser = createAsyncThunk("users/create", async (data, { reject
 	try {
 		const user = await AxiosJSON({
 			method: "post",
-			url: "/user",
+			url: "/user/register",
 			data,
 		});
 		return user;
@@ -157,9 +162,13 @@ export const createUser = createAsyncThunk("users/create", async (data, { reject
 
 export const editUser = createAsyncThunk("users/edit", async (data, { rejectWithValue }) => {
 	try {
+		const url = `/user/${data.id}`;
+		console.log(url, data);
+		delete data.id;
+		console.log(data, "====");
 		const { data: user } = await AxiosJSON({
-			method: "put",
-			url: `/user/${data.id}`,
+			method: "patch",
+			url: url,
 			data,
 		});
 		return user;
@@ -168,11 +177,11 @@ export const editUser = createAsyncThunk("users/edit", async (data, { rejectWith
 	}
 });
 
-export const deleteUser = createAsyncThunk("users/delete", async (data, { rejectWithValue }) => {
+export const deleteUser = createAsyncThunk("users/delete", async (id, { rejectWithValue }) => {
 	try {
 		const { data: user } = await AxiosJSON({
 			method: "delete",
-			url: `/user/${data.id}`,
+			url: `/user/${id}`,
 		});
 		return user;
 	} catch (error) {
@@ -182,6 +191,7 @@ export const deleteUser = createAsyncThunk("users/delete", async (data, { reject
 
 export const getUserById = createAsyncThunk("users/getUserById", async (data, { rejectWithValue }) => {
 	try {
+		console.log("getUserById: ", data);
 		const { data: user } = await AxiosJSON({
 			method: "get",
 			url: `/user/${data}`,
@@ -191,5 +201,7 @@ export const getUserById = createAsyncThunk("users/getUserById", async (data, { 
 		return rejectWithValue(error);
 	}
 });
+
+export const { setIsEdit, setNullCurrentUser } = userSlice.actions;
 
 export default userSlice.reducer;

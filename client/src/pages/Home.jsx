@@ -24,7 +24,7 @@ const Home = () => {
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex flex-col gap-2">
-				<h2 className="font-bold text-3xl">Welcome Back, {currentUser ? currentUser.name : "Admin"}</h2>
+				<h2 className="font-bold text-3xl">Welcome Back</h2>
 				<p className="text-gray-500">Track, manage your information here</p>
 			</div>
 

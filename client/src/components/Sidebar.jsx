@@ -21,7 +21,7 @@ const Sidebar = () => {
 				<ul className={`text-white  flex flex-col gap-1`}>
 					<li>
 						<NavLink to="/" className={isActive}>
-							<span className="text-md">Homepage</span>
+							<span className="text-md">Home</span>
 						</NavLink>
 					</li>
 					<li>

@@ -7,7 +7,7 @@ const Card = ({ data }) => {
 				</div>
 
 				<div className="mt-5">
-					<span className="text-4xl font-bold">{data.loading ? <span className="loading loading-spinner loading-md"></span> : data.total}</span>
+					<span className="text-4xl font-bold text-green-600">{data.loading ? <span className="loading loading-spinner loading-md"></span> : data.total}</span>
 				</div>
 			</div>
 		</>

@@ -7,3 +7,15 @@ export const AxiosJSON = axios.create({
 		"content-type": "application/json",
 	},
 });
+
+export const showModalHandler = (id) => {
+	if (id) {
+		document.getElementById(id).showModal();
+	} else {
+		document.getElementById("mainmodal").showModal();
+	}
+};
+
+export const removeModalHandler = () => {
+	document.querySelector("dialog[open]").querySelector("form").submit();
+};
