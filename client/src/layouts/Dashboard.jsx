@@ -9,7 +9,7 @@ const Dashboard = () => {
 			<div className="h-screen md:h-[97.5vh] md:mt-[2.5vh] bg-white w-screen border md:rounded-tl-[2.5rem] px-8 py-10 overflow-auto">
 				<Outlet />
 			</div>
-			<ToastContainer />
+			<ToastContainer autoClose={1500} />
 		</div>
 	);
 };

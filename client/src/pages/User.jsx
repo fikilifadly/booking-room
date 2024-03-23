@@ -3,7 +3,7 @@ import Modal from "../components/Modal";
 import Table from "../components/Table";
 import { removeModalHandler, showModalHandler } from "../utils";
 import { useSelector, useDispatch } from "react-redux";
-import { createUser, deleteUser, editUser, fetchUsers, setNullCurrentUser } from "../stores/userSlice";
+import { createUser, deleteUser, editUser, fetchUsers, getUserById, setNullCurrentUser } from "../stores/userSlice";
 
 const userFields = [
 	["name", "text"],
@@ -52,6 +52,10 @@ const User = () => {
 		showModalHandler();
 	};
 
+	const getUserByIdHandler = (id) => {
+		dispatch(getUserById(id));
+	};
+
 	const deleteHandler = () => {
 		dispatch(deleteUser(currentUser.id)).then((res) => {
 			if (res.payload) {
@@ -61,7 +65,6 @@ const User = () => {
 		});
 	};
 
-	console.log(currentUser);
 	return (
 		<>
 			<div className="flex flex-col gap-5">
@@ -71,7 +74,7 @@ const User = () => {
 						Add
 					</button>
 				</div>
-				<Table fields={userFields} data={users} loading={loading} title={"client"} idModal={"deleteUser"} />
+				<Table fields={userFields} data={users} loading={loading} title={"client"} idModal={"deleteUser"} getDataByIdHandler={getUserByIdHandler} />
 				<Modal title="User Form">
 					<form className="flex flex-col" onSubmit={submitModalHandler}>
 						{userFields.map((el, i) => {

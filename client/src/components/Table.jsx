@@ -1,20 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
 import { showModalHandler } from "../utils";
-import { getUserById } from "../stores/userSlice";
-const Table = ({ fields, data, loading, idModal }) => {
-	const { currentUser } = useSelector((state) => state.user);
-	const dispatch = useDispatch();
-
+const Table = ({ fields, data, loading, idModal, getDataByIdHandler }) => {
 	const ctaHandler = (e) => {
 		const { id, action } = e.target.dataset;
-		dispatch(getUserById(id));
+		getDataByIdHandler(id);
 		if (action === "edit") {
 			showModalHandler();
 		} else {
 			showModalHandler(idModal);
 		}
 	};
-	console.log(currentUser);
 
 	return (
 		<div className="overflow-x-auto">

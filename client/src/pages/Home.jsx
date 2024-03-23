@@ -10,7 +10,7 @@ const Home = () => {
 	const { clients, loading: clientLoading } = useSelector((state) => state.client);
 	const { rooms, loading: roomLoading } = useSelector((state) => state.room);
 	const { roomUsages, loading: roomUsageLoading } = useSelector((state) => state.roomUsage);
-	const { users, currentUser, loading: userLoading } = useSelector((state) => state.user);
+	const { users, loading: userLoading } = useSelector((state) => state.user);
 
 	const dispatch = useDispatch();
 

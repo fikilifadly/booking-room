@@ -59,7 +59,7 @@ const Login = () => {
 					</div>
 				</div>
 			</div>
-			<ToastContainer autoClose={2000} />
+			<ToastContainer autoClose={1500} />
 		</>
 	);
 };
