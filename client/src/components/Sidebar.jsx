@@ -15,18 +15,18 @@ const Sidebar = () => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/clients" className={isActive}>
+						<NavLink to="/client" className={isActive}>
 							<span className="text-md">Clients</span>
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/rooms" className={isActive}>
+						<NavLink to="/room" className={isActive}>
 							<span className="text-md">Rooms</span>
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/roomusage" className={isActive}>
-							<span className="text-md">Users</span>
+						<NavLink to="/room-usage" className={isActive}>
+							<span className="text-md">Rooms Usage</span>
 						</NavLink>
 					</li>
 					<li>

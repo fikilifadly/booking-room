@@ -1,5 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./layouts/Dashboard";
+import Home from "./pages/Home";
+import User from "./pages/User";
+import Room from "./pages/Room";
+import Client from "./pages/Client";
+import RoomUsage from "./pages/RoomUsage";
 
 const router = createBrowserRouter([
 	{
@@ -23,23 +28,23 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "/",
-				element: <div>Hello</div>,
+				element: <Home />,
 			},
 			{
 				path: "/user",
-				element: <div>Hello</div>,
+				element: <User />,
 			},
 			{
 				path: "/room",
-				element: <div>Hello</div>,
+				element: <Room />,
 			},
 			{
 				path: "/client",
-				element: <div>Hello</div>,
+				element: <Client />,
 			},
 			{
 				path: "/room-usage",
-				element: <div>Hello</div>,
+				element: <RoomUsage />,
 			},
 		],
 	},
