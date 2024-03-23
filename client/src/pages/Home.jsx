@@ -1,24 +1,26 @@
 import { useSelector, useDispatch } from "react-redux";
 import Cards from "../components/Cards";
-import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { fetchClients } from "../stores/clientSlice";
 import { fetchUsers } from "../stores/userSlice";
+import { fetchRooms } from "../stores/roomSlice";
+import { fetchRoomUsages } from "../stores/roomUsage";
 
 const Home = () => {
-	const { clients } = useSelector((state) => state.client);
-	const { rooms } = useSelector((state) => state.room);
-	const { roomUsages } = useSelector((state) => state.roomUsage);
-	const { users, currentUser, access_token } = useSelector((state) => state.user);
+	const { clients, loading: clientLoading } = useSelector((state) => state.client);
+	const { rooms, loading: roomLoading } = useSelector((state) => state.room);
+	const { roomUsages, loading: roomUsageLoading } = useSelector((state) => state.roomUsage);
+	const { users, currentUser, loading: userLoading } = useSelector((state) => state.user);
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchUsers());
+		dispatch(fetchRooms());
+		dispatch(fetchRoomUsages());
 	}, [dispatch]);
 
-	console.log(access_token);
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex flex-col gap-2">
@@ -28,13 +30,12 @@ const Home = () => {
 
 			<Cards
 				data={[
-					{ title: "Clients", total: clients?.length },
-					{ title: "Rooms", total: rooms.length },
-					{ title: "Users", total: users.length },
-					{ title: "Room Usage", total: roomUsages.length },
+					{ title: "Clients", total: clients?.length, loading: clientLoading },
+					{ title: "Rooms", total: rooms?.length, loading: roomLoading },
+					{ title: "Users", total: users?.length, loading: userLoading },
+					{ title: "Room Usage", total: roomUsages?.length, loading: roomUsageLoading },
 				]}
 			></Cards>
-			<button onClick={() => toast("hello")}>test</button>
 		</div>
 	);
 };

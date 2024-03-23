@@ -5,7 +5,7 @@ const clientSlice = createSlice({
 	name: "clients",
 	initialState: {
 		clients: [],
-		loading: false,
+		loading: true,
 		errorMessage: "",
 	},
 	reducers: {},

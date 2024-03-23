@@ -1,4 +1,4 @@
-const Table = ({ fields, data, title }) => {
+const Table = ({ fields, data, loading }) => {
 	return (
 		<div className="overflow-x-auto">
 			<table className="table table-zebra">
@@ -14,8 +14,7 @@ const Table = ({ fields, data, title }) => {
 				</thead>
 				<tbody>
 					{/* row 1 */}
-					{data.length ? (
-						0 &&
+					{!loading && data.length > 0 ? (
 						data.map((item, index) => (
 							<tr key={index}>
 								<td>{index + 1}</td>
@@ -23,12 +22,14 @@ const Table = ({ fields, data, title }) => {
 									<td key={field}>{item[field[0]]}</td>
 								))}
 								<td>
-									<button className="btn btn-ghost btn-xs" onClick={() => console.log("edit" + item.id)}>
-										Edit
-									</button>
-									<button className="btn btn-ghost btn-xs" onClick={() => console.log("delete " + item.id)}>
-										Delete
-									</button>
+									<div className="flex gap-3">
+										<button className="bg-yellow-400 px-5 py-2 rounded-md text-xs" onClick={() => console.log("edit" + item.id)}>
+											Edit
+										</button>
+										<button className="bg-red-600 px-5 py-2 rounded-md text-xs text-white" onClick={() => console.log("delete " + item.id)}>
+											Delete
+										</button>
+									</div>
 								</td>
 							</tr>
 						))

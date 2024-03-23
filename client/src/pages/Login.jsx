@@ -15,8 +15,8 @@ const Login = () => {
 			password: e.target.password.value,
 		};
 
-		dispatch(loginUser(data)).then(() => {
-			navigate("/");
+		dispatch(loginUser(data)).then((res) => {
+			if (res.payload) navigate("/");
 		});
 	};
 

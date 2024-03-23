@@ -1,16 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { setAccessToken } from "../stores/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const isActive = ({ isActive }) => (isActive ? "flex gap-3 py-2 px-3 items-center bg-green-500 rounded-lg text-white" : "flex gap-3 py-2 px-3 items-center");
 	const logOutHandler = () => {
-		dispatch(setAccessToken(null));
 		localStorage.removeItem("access_token");
 		toast.success("Logout Success");
 		navigate("/login");

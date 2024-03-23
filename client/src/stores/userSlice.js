@@ -6,15 +6,11 @@ const userSlice = createSlice({
 	name: "user",
 	initialState: {
 		users: [],
-		access_token: "",
 		loading: false,
 		errorMessage: "",
 		currentUser: null,
 	},
 	reducers: {
-		setAccessToken: (state, { payload }) => {
-			state.access_token = payload;
-		},
 		getUserById: (state, { payload }) => {
 			state.currentUser = state.users.find((user) => user.id === payload);
 		},
@@ -30,6 +26,7 @@ const userSlice = createSlice({
 				state.loading = false;
 			})
 			.addCase(fetchUsers.rejected, (state, action) => {
+				console.log(action);
 				toast.error(action.error.message);
 				state.loading = false;
 				state.errorMessage = action.error.message;
@@ -44,25 +41,24 @@ const userSlice = createSlice({
 				state.users.push(payload);
 				state.loading = false;
 			})
-			.addCase(createUser.rejected, (state, action) => {
-				toast.error(action.error.message);
+			.addCase(createUser.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
-				state.errorMessage = action.error.message;
 			});
 		builder
 			.addCase(loginUser.pending, (state) => {
-				console.log("masuk pending");
 				state.loading = true;
 			})
 			.addCase(loginUser.fulfilled, (state, { payload }) => {
-				toast.success("Login Success");
+				toast.success(payload);
 				state.errorMessage = "";
 				state.access_token = payload;
-				localStorage.setItem("access_token", payload);
+				localStorage.setItem("access_token", payload.access_token);
 				state.loading = false;
 			})
-			.addCase(loginUser.rejected, (state, action) => {
-				state.errorMessage = action.error.message;
+			.addCase(loginUser.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
 				toast.error(state.errorMessage);
 				state.loading = false;
 			});
@@ -81,8 +77,9 @@ const userSlice = createSlice({
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(editUser.rejected, (state, action) => {
-				state.errorMessage = action.error.message;
+			.addCase(editUser.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
+				toast.error(state.errorMessage);
 				state.loading = false;
 			});
 		builder
@@ -95,10 +92,10 @@ const userSlice = createSlice({
 				state.users = state.users.filter((user) => user.id !== payload.id);
 				state.loading = false;
 			})
-			.addCase(deleteUser.rejected, (state, action) => {
-				state.loading = false;
-				state.errorMessage = action.error.message;
+			.addCase(deleteUser.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
 				toast.error(state.errorMessage);
+				state.loading = false;
 			});
 		builder
 			.addCase(getUserById.pending, (state) => {
@@ -109,66 +106,90 @@ const userSlice = createSlice({
 				state.errorMessage = "";
 				state.loading = false;
 			})
-			.addCase(getUserById.rejected, (state, action) => {
-				state.loading = false;
-				state.errorMessage = action.error.message;
+			.addCase(getUserById.rejected, (state, { payload }) => {
+				state.errorMessage = payload.response.data.message;
 				toast.error(state.errorMessage);
 			});
 	},
 });
 
-export const loginUser = createAsyncThunk("users/login", async (data) => {
-	const { data: user } = await AxiosJSON({
-		method: "post",
-		url: "user/login",
-		data,
-	});
+export const loginUser = createAsyncThunk("users/login", async (data, { rejectWithValue }) => {
+	try {
+		const { data: user } = await AxiosJSON({
+			method: "post",
+			url: "user/login",
+			data,
+		});
 
-	return user.access_token;
+		return user;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const fetchUsers = createAsyncThunk("users/fetch", async () => {
-	const { data } = await AxiosJSON({
-		method: "get",
-		url: "/user",
-	});
-	return data;
+export const fetchUsers = createAsyncThunk("users/fetch", async (data, { rejectWithValue }) => {
+	try {
+		const { data } = await AxiosJSON({
+			method: "get",
+			url: "/user",
+		});
+		return data;
+	} catch (error) {
+		if (!error.response) {
+			throw error;
+		}
+		return rejectWithValue(error);
+	}
 });
 
-export const createUser = createAsyncThunk("users/create", async (data) => {
-	const { data: user } = await AxiosJSON({
-		method: "post",
-		url: "/user",
-		data,
-	});
-	return user;
+export const createUser = createAsyncThunk("users/create", async (data, { rejectWithValue }) => {
+	try {
+		const user = await AxiosJSON({
+			method: "post",
+			url: "/user",
+			data,
+		});
+		return user;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const editUser = createAsyncThunk("users/edit", async (data) => {
-	const { data: user } = await AxiosJSON({
-		method: "put",
-		url: `/user/${data.id}`,
-		data,
-	});
-	return user;
+export const editUser = createAsyncThunk("users/edit", async (data, { rejectWithValue }) => {
+	try {
+		const { data: user } = await AxiosJSON({
+			method: "put",
+			url: `/user/${data.id}`,
+			data,
+		});
+		return user;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const deleteUser = createAsyncThunk("users/delete", async (data) => {
-	const { data: user } = await AxiosJSON({
-		method: "delete",
-		url: `/user/${data.id}`,
-	});
-	return user;
+export const deleteUser = createAsyncThunk("users/delete", async (data, { rejectWithValue }) => {
+	try {
+		const { data: user } = await AxiosJSON({
+			method: "delete",
+			url: `/user/${data.id}`,
+		});
+		return user;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
 
-export const getUserById = createAsyncThunk("users/getUserById", async (data) => {
-	const { data: user } = await AxiosJSON({
-		method: "get",
-		url: `/user/${data}`,
-	});
-	return user;
+export const getUserById = createAsyncThunk("users/getUserById", async (data, { rejectWithValue }) => {
+	try {
+		const { data: user } = await AxiosJSON({
+			method: "get",
+			url: `/user/${data}`,
+		});
+		return user;
+	} catch (error) {
+		return rejectWithValue(error);
+	}
 });
-
-export const { setAccessToken } = userSlice.actions;
 
 export default userSlice.reducer;
