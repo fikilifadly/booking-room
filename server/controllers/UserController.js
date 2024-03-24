@@ -61,6 +61,7 @@ module.exports = class UserController {
 		try {
 			const { id } = req.params;
 
+			console.log(id, " =====");
 			const user = await User.findOne({
 				where: {
 					id,

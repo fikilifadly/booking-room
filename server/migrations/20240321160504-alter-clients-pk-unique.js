@@ -24,7 +24,7 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "clients_id_seq" CASCADE;');
-		await queryInterface.sequelize.query("ALTER TABLE clients DROP CONSTRAINT clients_pkey;");
+		// await queryInterface.sequelize.query('DROP SEQUENCE IF EXISTS "clients_id_seq" CASCADE;');
+		// await queryInterface.sequelize.query("ALTER TABLE clients DROP CONSTRAINT clients_pkey;");
 	},
 };
