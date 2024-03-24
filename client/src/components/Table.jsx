@@ -1,4 +1,4 @@
-import { showModalHandler } from "../utils";
+import { dateFormat, showModalHandler } from "../utils";
 const Table = ({ fields, data, loading, idModal, getDataByIdHandler }) => {
 	const ctaHandler = (e) => {
 		const { id, action } = e.target.dataset;
@@ -30,7 +30,7 @@ const Table = ({ fields, data, loading, idModal, getDataByIdHandler }) => {
 							<tr key={index}>
 								<td>{index + 1}</td>
 								{fields.map((field) => (
-									<td key={field}>{item[field[0]] ? item[field[0]] : "xxxxxxxxx"}</td>
+									<td key={field}>{item[field[0]] ? (field[1] == "date" ? dateFormat(item[field[0]]) : item[field[0]]) : "xxxxxxxxx"}</td>
 								))}
 								<td>
 									<div className="flex gap-3">

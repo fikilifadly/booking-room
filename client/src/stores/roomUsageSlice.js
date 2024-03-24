@@ -33,14 +33,15 @@ const roomUsageSlice = createSlice({
 		builder
 			.addCase(createRoomUsage.pending, (state) => {
 				state.loading = true;
+				console.log("test1");
 			})
 			.addCase(createRoomUsage.fulfilled, (state, { payload }) => {
 				toast.success(payload.message);
-				state.roomUsages.push(payload);
 				state.errorMessage = "";
 				state.loading = false;
 			})
 			.addCase(createRoomUsage.rejected, (state, { payload }) => {
+				console.log("test3");
 				state.errorMessage = payload.response.data.message;
 				toast.error(state.errorMessage);
 				state.loading = false;

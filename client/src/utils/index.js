@@ -19,3 +19,9 @@ export const showModalHandler = (id) => {
 export const removeModalHandler = () => {
 	document.querySelector("dialog[open]").querySelector("form").submit();
 };
+
+export const dateFormat = (date) => {
+	date = new Date(date);
+	date = date.toISOString().split("T")[0];
+	return date;
+};

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { fetchClients } from "../stores/clientSlice";
 import { fetchUsers } from "../stores/userSlice";
 import { fetchRooms } from "../stores/roomSlice";
-import { fetchRoomUsages } from "../stores/roomUsage";
+import { fetchRoomUsages } from "../stores/roomUsageSlice";
 
 const Home = () => {
 	const { clients, loading: clientLoading } = useSelector((state) => state.client);

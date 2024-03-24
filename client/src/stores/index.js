@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import clientSlice from "./clientSlice";
 import roomSlice from "./roomSlice";
-import roomUsage from "./roomUsage";
+import roomUsage from "./roomUsageSlice";
 import userSlice from "./userSlice";
 
 export const store = configureStore({
