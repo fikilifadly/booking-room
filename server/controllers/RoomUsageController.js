@@ -54,7 +54,7 @@ module.exports = class RoomUsageController {
 			if (bookingDate < new Date()) throw { name: "Invalid date", status: 400 };
 
 			const roomUsage = await RoomUsage.create({ clientId, roomId, startTime, endTime, bookingDate, quotaUsed });
-			res.status(201).json(roomUsage);
+			res.status(201).json({ message: "Room usage has been added" });
 		} catch (error) {
 			next(error);
 		}
@@ -105,7 +105,9 @@ module.exports = class RoomUsageController {
 					},
 				});
 
-				if (usedRoom && usedRoom.clientId !== clientId) throw { name: "Room already taken", status: 400 };
+				console.log(usedRoom.clientId, clientId, "masuk sini", usedRoom.clientId !== clientId, usedRoom);
+				if (usedRoom.clientId != clientId) throw { name: "Room already taken", status: 400 };
+				console.log(usedRoom.clientId, clientId, "masuk sini 2");
 			}
 
 			let newRoomUsage = Object.fromEntries(Object.entries(req.body).filter(([key, value]) => key in roomUsage && value !== undefined && value !== null && value !== ""));
