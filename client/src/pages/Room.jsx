@@ -89,7 +89,7 @@ const Room = () => {
 			</Modal>
 			<Modal id="deleteRoom">
 				<div className="getflex flex-col gap-5">
-					<p className="block">Are you sure want to delete {currentRoom?.name}?</p>
+					<p className="block">Are you sure want to delete {currentRoom?.roomName}?</p>
 					<div className="flex justify-end gap-2">
 						<button className="btn bg-red-500 text-white" onClick={deleteHandler}>
 							Yes
